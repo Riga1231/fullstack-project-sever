@@ -1,17 +1,12 @@
 const mysql = require("mysql2/promise");
+const { URL } = require("url");
 
-const dbUrl = new URL(process.env.MYSQL_URL);
+const dbUrl = new URL(process.env.DATABASE_URL);
 
-// Extract and convert to mysql2 format
-const pool = mysql.createPool({
+const connection = await mysql.createConnection({
   host: dbUrl.hostname,
+  port: dbUrl.port,
   user: dbUrl.username,
   password: dbUrl.password,
-  database: dbUrl.pathname.replace("/", ""), // remove leading slash
-  port: dbUrl.port,
-  waitForConnections: true,
-  connectionLimit: 10,
-  queueLimit: 0,
+  database: dbUrl.pathname.slice(1), // remove leading slash
 });
-
-module.exports = pool;
