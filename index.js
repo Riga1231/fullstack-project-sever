@@ -10,8 +10,6 @@ app.use(express.json());
 
 app.get("/", async (req, res) => {
   try {
-    const [rows] = await db.query("SELECT NOW() AS current_time");
-    console.log("Query result:", rows); // <--- debug this
     res.send(`Connected! Server time is: ${rows[0].current_time}`);
   } catch (error) {
     console.error(error);
