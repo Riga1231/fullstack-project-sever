@@ -3,26 +3,43 @@ const express = require("express");
 const cors = require("cors");
 const app = express();
 const PORT = 5000;
+
+// Load environment variables
+require("dotenv").config();
+
 const db = require("./db");
 
 app.use(cors());
 app.use(express.json());
 
+// Home route to test DB connection
 app.get("/", async (req, res) => {
   try {
-    const [rows] = await db.query("SELECT NOW() AS current_time");
-    res.send(`Connected! Server time is: ${rows[0].current_time}`);
-    console.log("MYSQL_URL =", process.env.MYSQL_URL);
+    console.log("📡 Incoming GET / request");
+    console.log("🔐 MYSQL_URL =", process.env.MYSQL_URL);
+
+    if (!db || typeof db.query !== "function") {
+      throw new Error("❌ Database connection (db) is not initialized.");
+    }
+
+    const [rows] = await db.query("SELECT NOW()");
+    console.log("✅ SQL Query Result:", rows);
+
+    const serverTime = Object.values(rows[0])[0];
+    res.send(`Connected! Server time is: ${serverTime}`);
   } catch (error) {
-    console.error(error);
+    console.error("💥 Error during DB query:", error);
     res.status(500).send("Failed to connect to DB: " + error.message);
   }
 });
 
+// Simple API route
 app.get("/api/hello", (req, res) => {
+  console.log("📡 Incoming GET /api/hello request");
   res.json({ message: "Hello from backend!" });
 });
 
+// Start the server
 app.listen(PORT, () => {
-  console.log(`Server is running on http://localhost:${PORT}`);
+  console.log(`🚀 Server is running on http://localhost:${PORT}`);
 });
