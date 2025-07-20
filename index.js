@@ -10,7 +10,9 @@ app.use(express.json());
 
 app.get("/", async (req, res) => {
   try {
+    const [rows] = await db.query("SELECT NOW() AS current_time");
     res.send(`Connected! Server time is: ${rows[0].current_time}`);
+    console.log("MYSQL_URL =", process.env.MYSQL_URL);
   } catch (error) {
     console.error(error);
     res.status(500).send("Failed to connect to DB: " + error.message);

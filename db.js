@@ -3,6 +3,8 @@ const mysql = require("mysql2/promise");
 let pool;
 
 if (process.env.MYSQL_URL) {
+  console.log("MYSQL_URL =", process.env.MYSQL_URL);
+
   // Production (e.g., Railway)
   const { URL } = require("url");
   const dbUrl = new URL(process.env.MYSQL_URL);
