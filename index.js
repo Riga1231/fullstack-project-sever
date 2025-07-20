@@ -26,10 +26,12 @@ app.get("/", async (req, res) => {
     console.log("✅ SQL Query Result:", rows);
 
     const serverTime = Object.values(rows[0])[0];
-    res.send(`Connected! Server time is: ${serverTime}`);
+    res.json({ message: `Connected! Server time is: ${serverTime}` }); // ✅ Return JSON
   } catch (error) {
     console.error("💥 Error during DB query:", error);
-    res.status(500).send("Failed to connect to DB: " + error.message);
+    res
+      .status(500)
+      .json({ message: "Failed to connect to DB: " + error.message });
   }
 });
 
