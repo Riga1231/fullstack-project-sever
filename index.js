@@ -34,6 +34,18 @@ app.get("/", async (req, res) => {
       .json({ message: "Failed to connect to DB: " + error.message });
   }
 });
+let backendCounter = 0; // 🧠 This is the in-memory variable that persists as long as server is running
+
+// Route to get the current counter value
+app.get("/api/counter", (req, res) => {
+  res.json({ counter: backendCounter });
+});
+
+// Route to increment the counter
+app.post("/api/counter/increment", (req, res) => {
+  backendCounter += 1;
+  res.json({ counter: backendCounter });
+});
 
 // Simple API route
 app.get("/api/hello", (req, res) => {
